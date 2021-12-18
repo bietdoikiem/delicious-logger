@@ -1,0 +1,1 @@
+# A "Delicious" malicious logger
