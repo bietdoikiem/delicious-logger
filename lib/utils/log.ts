@@ -1,7 +1,14 @@
 import { Request } from 'express';
 import { Color, colorize } from './color';
 
-const logRequest = (req: Request) => {
+// TODO: Save and Log Request in a file (?)
+
+/**
+ * Log incoming request to server including payload
+ *
+ * @param req Request
+ */
+export const logRequest = (req: Request) => {
   const { body, query, headers } = req;
   const logData = {
     body,
@@ -15,5 +22,3 @@ const logRequest = (req: Request) => {
     )} - ${colorize(`${req.url}`, Color.FgYellow)} - ${JSON.stringify(logData)}`
   );
 };
-
-export { logRequest };

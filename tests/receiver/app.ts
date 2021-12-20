@@ -4,14 +4,25 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+/**
+ * Check if server is running
+ */
 app.get('/health-check', (_req: Request, res: Response) => {
   return res.status(200).json({
     message: `App is running well at port ${process.env.PORT}`,
   });
 });
 
-app.get('/', (_req: Request, res: Response) => {
-  res.send('Welcome to our the Hacker1337 server!');
+/**
+ * Receive payload of victim endpoint
+ */
+app.post('/', (req: Request, res: Response) => {
+  console.log(req.body);
+  return res.status(200).send();
+});
+
+app.post('/victims', (req: Request, res: Response) => {
+  return res.status(200).send();
 });
 
 app.listen(Number(process.env.PORT), () => {

@@ -1,11 +1,16 @@
 import express, { Request, Response } from 'express';
-import deliciousLogger from '../../src/index';
+import deliciousLogger from '../../lib/index';
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(deliciousLogger());
+app.use(
+  deliciousLogger({
+    layout: 'base',
+    filename: 'request.log',
+  })
+);
 
 app.get('/health-check', (_req: Request, res: Response) => {
   return res.status(200).json({
@@ -21,7 +26,7 @@ app.post('/accounts/create', (req: Request, res: Response) => {
 });
 
 app.get('/', (_req: Request, res: Response) => {
-  res.send('Welcome to our server!');
+  res.send('Welcome to the Victim server!');
 });
 
 app.listen(Number(process.env.PORT), () => {
