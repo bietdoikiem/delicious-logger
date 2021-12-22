@@ -1,22 +1,26 @@
 import { Request } from 'express';
+import path from 'path';
+import RollUp from '../rollups/RollUp';
+import FileUtils from '../utils/file';
 import ILogger from './ILogger';
 
 export default abstract class Logger implements ILogger {
   protected maxFileSize: number;
-  protected dateFormat: string;
+  protected dateFormat: string; // NOTE: Currently unsupported
   protected filename: string;
   protected separator: string;
+  protected rollup: RollUp | null;
 
   constructor(
     filename: string,
-    maxFileSize: number = -1,
-    dateFormat: string = 'yyyy-MM-dd',
-    separator: string = ''
+    separator: string = '\n', // NOTE: Default new line
+    rollup: RollUp | null = null
   ) {
-    this.maxFileSize = maxFileSize;
-    this.dateFormat = dateFormat;
-    this.filename = filename;
+    this.filename = path.isAbsolute(filename)
+      ? FileUtils.absoluteToRelative(filename)
+      : filename;
     this.separator = separator;
+    this.rollup = rollup;
   }
 
   abstract log(req: Request): void;

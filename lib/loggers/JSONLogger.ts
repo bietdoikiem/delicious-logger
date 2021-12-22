@@ -23,10 +23,7 @@ export default class JSONLogger extends Logger {
       throw new Error('STASH ERROR! Size of the log file is already full');
     }
     // Save to the log file
-    FileUtils.append(
-      this.filename,
-      JSON.stringify(this.buildLog(req)) + this.separator
-    );
+    FileUtils.append(this.filename, this.buildLog(req) + this.separator);
   }
 
   /**

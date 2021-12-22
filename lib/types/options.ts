@@ -1,7 +1,6 @@
 export type LoggerOptions = {
-  layout: 'base' | 'json';
+  layout?: 'basic' | 'json';
   filename: string;
   maxFileSize?: number;
-  dateFormat?: string;
   separator?: string;
 };
