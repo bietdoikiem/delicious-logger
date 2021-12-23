@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import deliciousLogger from '../../lib/index';
+
 const app = express();
 
 const baseDir = __dirname;
@@ -9,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   deliciousLogger({
-    layout: 'json',
+    layout: 'basic',
     filename: `${baseDir}/logs/requests.log`,
     maxFileSize: 6000, // NOTE: 6 KB
   })
@@ -18,6 +19,7 @@ app.use(
 /**
  * Health check endpoint
  */
+// eslint-disable-next-line arrow-body-style
 app.get('/health-check', (_req: Request, res: Response) => {
   return res.status(200).json({
     message: `App is running well at port ${process.env.PORT}`,
@@ -43,5 +45,6 @@ app.get('/', (_req: Request, res: Response) => {
 
 // Run node server
 app.listen(Number(process.env.PORT), () => {
+  // eslint-disable-next-line no-console
   console.log(`Victim Application is running at port ${process.env.PORT}`);
 });

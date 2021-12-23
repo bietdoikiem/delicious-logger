@@ -6,9 +6,13 @@ import ILogger from './ILogger';
 
 export default abstract class Logger implements ILogger {
   protected maxFileSize: number;
+
   protected dateFormat: string; // NOTE: Currently unsupported
+
   protected filename: string;
+
   protected separator: string;
+
   protected rollup: RollUp | null;
 
   constructor(
@@ -35,10 +39,11 @@ export default abstract class Logger implements ILogger {
     // CASE 1: Rollup disabled
     if (!this.rollup) {
       // Save to the log file
-      FileUtils.append(
-        this.filename,
-        JSON.stringify(this.buildLog(req)) + this.separator
-      );
+      try {
+        FileUtils.append(this.filename, this.buildLog(req) + this.separator);
+      } catch (err) {
+        console.error(err);
+      }
       return;
     }
     // CASE 2: Rollup enabled
@@ -48,7 +53,12 @@ export default abstract class Logger implements ILogger {
       this.rollup.roll();
     }
     const filename = this.rollup.getCurrentRoll();
-    FileUtils.append(filename, this.buildLog(req) + this.separator);
+    // Save to the log file
+    try {
+      FileUtils.append(filename, this.buildLog(req) + this.separator);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   abstract buildLog(req: Request): string;

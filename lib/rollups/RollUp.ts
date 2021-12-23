@@ -2,6 +2,7 @@ import IRollUp from './IRollUp';
 
 export default abstract class RollUp implements IRollUp {
   protected originalFile: string;
+
   protected currentRollIndex: number;
 
   constructor(originalFile: string) {

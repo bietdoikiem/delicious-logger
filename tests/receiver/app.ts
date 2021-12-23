@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+
 const app = express();
 
 app.use(express.json());
@@ -7,6 +8,7 @@ app.use(express.urlencoded({ extended: false }));
 /**
  * Check if server is running
  */
+// eslint-disable-next-line arrow-body-style
 app.get('/health-check', (_req: Request, res: Response) => {
   return res.status(200).json({
     message: `App is running well at port ${process.env.PORT}`,
@@ -21,7 +23,8 @@ app.post('/', (req: Request, res: Response) => {
   return res.status(200).send();
 });
 
-app.post('/victims', (req: Request, res: Response) => {
+// eslint-disable-next-line arrow-body-style
+app.post('/victims', (_req: Request, res: Response) => {
   return res.status(200).send();
 });
 

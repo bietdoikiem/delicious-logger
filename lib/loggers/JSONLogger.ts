@@ -8,6 +8,7 @@ export default class JSONLogger extends Logger {
    * @param req
    */
   log(req: Request) {
+    // eslint-disable-next-line no-console
     console.log(`[${new Date().toLocaleString()}] - ${this.buildLog(req)}`);
   }
 
