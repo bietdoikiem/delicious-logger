@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -24,6 +27,6 @@
     "resolveJsonModule": true,
     "baseUrl": "."
   },
-  "exclude": ["node_modules", "./tests/**/*"],
+  "exclude": ["node_modules"],
   "include": ["./lib/**/*"]
 }
