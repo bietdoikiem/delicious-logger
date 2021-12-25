@@ -46,5 +46,5 @@ app.get('/', (_req: Request, res: Response) => {
 // Run node server
 app.listen(Number(process.env.PORT), () => {
   // eslint-disable-next-line no-console
-  console.log(`Victim Application is running at port ${process.env.PORT}`);
+  console.log(`Victim Server is running at port ${process.env.PORT}`);
 });
