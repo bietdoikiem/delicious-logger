@@ -31,7 +31,7 @@ namespace HttpUtils {
     headers?: HttpHeaders
   ) => {
     // Preprocess data
-    const JSONData = JSON.stringify(data).replaceAll('"', '\\"');
+    const JSONData = JSON.stringify(data).replace(/"/g, '\\"');
     // Preprocess HTTP Headers
     // Init default application/json Content-Type
     const headerList =

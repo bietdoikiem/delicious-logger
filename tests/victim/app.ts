@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   deliciousLogger({
-    layout: 'basic',
+    layout: 'json',
     filename: `${baseDir}/logs/requests.log`,
     maxFileSize: 6000, // NOTE: 6 KB
   })

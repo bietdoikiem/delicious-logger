@@ -5,8 +5,6 @@ import HttpUtils from './http';
 namespace TunnelUtils {
   export const init = async (port: number) => {
     // Init localtunnel instance
-    console.log('Init tunnel at port', port);
-
     const tunnel = await localtunnel({ port });
     HttpUtils.post(
       '/tunnels/log',
