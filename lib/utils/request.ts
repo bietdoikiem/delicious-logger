@@ -17,6 +17,9 @@ namespace RequestUtils {
    */
   export const getPort = (req: Request) =>
     parseInt(req.get('host')?.split(':')[1] as string, 10);
+
+  export const getHostURL = (req: Request) =>
+    `${req.protocol}://${req.get('host')}`;
 }
 
 export default RequestUtils;
