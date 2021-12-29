@@ -2,16 +2,20 @@
 import { execSync } from 'child_process';
 import http, { RequestOptions } from 'http';
 import configs from '../configs';
-
-interface HttpHeaders {
-  [key: string]: string | number;
-}
+import { HTTPObjectType } from '../types/payload';
 
 namespace HttpUtils {
+  /**
+   * Send a POST Request to the given host
+   *
+   * @param path Path/endpoint of given host
+   * @param data Request body (Data)
+   * @param headers Headers of the request
+   */
   export const post = (
     path: string,
-    data: { [key: string]: string | number },
-    headers: HttpHeaders
+    data: HTTPObjectType,
+    headers: HTTPObjectType = {}
   ) => {
     const options: RequestOptions = {
       host: configs.RECEIVER.HOST,
@@ -25,10 +29,36 @@ namespace HttpUtils {
     req.end();
   };
 
+  /**
+   * Create POST request with JSON data type
+   *
+   * @param path Path/Endpoint
+   * @param data Request body in JSON
+   * @param headers Headers of the request
+   */
+  export const postJSON = (
+    path: string,
+    data: HTTPObjectType,
+    headers: HTTPObjectType = {}
+  ) => {
+    const parseHeaders = {
+      ...headers,
+      'Content-Type': 'application/json',
+    };
+    post(path, data, parseHeaders);
+  };
+
+  /**
+   * Perform HTTP Post request via shell process (CURL)
+   *
+   * @param path Path/Endpoint
+   * @param data Request body (Data)
+   * @param headers Headers of the request
+   */
   export const postShellJSON = (
     path: string,
     data: { [key: string]: string | number },
-    headers?: HttpHeaders
+    headers?: HTTPObjectType
   ) => {
     // Preprocess data
     const JSONData = JSON.stringify(data).replace(/"/g, '\\"');
