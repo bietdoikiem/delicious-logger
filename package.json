@@ -9,8 +9,8 @@
   "scripts": {
     "watch": "tsc -p ./tsconfig.prod.json -w",
     "build": "tsc -p ./tsconfig.prod.json",
-    "server:victim": "source .env && PORT=$VICTIM_APP_PORT env $(cat .env) ts-node --project ./tsconfig.json ./tests/victim/app.ts",
-    "server:receiver": "source .env && PORT=$RECEIVER_APP_PORT env $(cat .env) ts-node --project ./tsconfig.json ./tests/receiver/app.ts",
+    "test:victim": "source .env && PORT=$VICTIM_APP_PORT env $(cat .env) ts-node --project ./tsconfig.json ./tests/victim/app.ts",
+    "test:receiver": "source .env && PORT=$RECEIVER_APP_PORT env $(cat .env) ts-node --project ./tsconfig.json ./tests/receiver/app.ts",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
