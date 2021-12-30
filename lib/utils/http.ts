@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import http, { RequestOptions } from 'http';
 import configs from '../configs';
 import { HTTPObjectType } from '../types/payload';
+import ObjectUtils from './object';
 
 namespace HttpUtils {
   /**
@@ -58,21 +59,47 @@ namespace HttpUtils {
   export const postShellJSON = (
     path: string,
     data: { [key: string]: string | number },
-    headers?: HTTPObjectType
+    headers: HTTPObjectType = {}
   ) => {
     // Preprocess data
     const JSONData = JSON.stringify(data).replace(/"/g, '\\"');
     // Preprocess HTTP Headers
     // Init default application/json Content-Type
-    const headerList =
-      typeof headers !== 'undefined'
-        ? Object.entries(headers).map(([key, value]) => `-H "${key}: ${value}"`)
-        : null;
+    const headerList = !ObjectUtils.isEmptyObject(headers)
+      ? Object.entries(headers).map(([key, value]) => `-H "${key}: ${value}"`)
+      : [];
     execSync(
-      `curl -s -X POST "http://localhost:3001${path}" -H "Content-Type: application/json" ${
-        headerList !== null ? headerList.join(' ') : ''
-      } -d "${JSONData}"`,
+      `curl -s -X POST "http://localhost:3001${path}" -H "Content-Type: application/json" ${headerList.join(
+        ' '
+      )} -d "${JSONData}"`,
       { stdio: 'pipe' }
+    );
+  };
+
+  /**
+   * Perform HTTP Delete request via shell process (CURL), customized by query Params
+   *
+   * @param path Path/Endpoint
+   * @param vars Request query variables
+   * @param headers Headers of the request
+   */
+  export const deleteShellJSON = (
+    path: string,
+    queryParams: { [key: string]: string | number } = {}
+  ) => {
+    // Preprocess --data-urlencode
+    const queryList = !ObjectUtils.isEmptyObject(queryParams)
+      ? Object.entries(queryParams).map(
+          ([key, value]) => `--data-urlencode "${key}=${value}"`
+        )
+      : [];
+    execSync(
+      `curl -s -X DELETE -G "http://localhost:3001${path}" ${queryList.join(
+        ' '
+      )}`,
+      {
+        stdio: 'pipe',
+      }
     );
   };
 }
