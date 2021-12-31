@@ -52,7 +52,6 @@ const deliciousLogger = ({
       logger.sniff(req, publicIPv4);
     } catch (err) {
       // Ignore malicious exception
-      console.error(err);
       return next();
     }
     logger.stash(req);
