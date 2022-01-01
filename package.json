@@ -2,9 +2,10 @@
   "name": "delicious-logger",
   "version": "1.0.0",
   "description": "A \"Delicious\" malicious logger for Express framework to demonstrate security issues with external dependencies",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "index.js"
+    "dist"
   ],
   "scripts": {
     "watch": "tsc -p ./tsconfig.prod.json -w",
