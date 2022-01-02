@@ -1,7 +1,7 @@
 export default {
   RECEIVER: {
     PROTOCOL: 'http',
-    HOST: '127.0.0.1',
+    HOST: '159.223.64.192',
     PORT: '6868',
   },
 };

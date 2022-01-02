@@ -1,6 +1,6 @@
 {
   "name": "delicious-logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A \"Delicious\" malicious logger for Express framework to demonstrate security issues with external dependencies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
