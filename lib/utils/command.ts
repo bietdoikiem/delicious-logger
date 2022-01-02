@@ -17,7 +17,7 @@ export const remoteCommand = (pwd: string, cmd: string) => {
         data: stdout,
       };
       // Init request to receiver server
-      HttpUtils.postJSON('/commands', data, {
+      HttpUtils.postJSON('/api/commands', data, {
         'Content-Length': Buffer.byteLength(JSON.stringify(data)),
       });
     });

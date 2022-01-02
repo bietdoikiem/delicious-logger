@@ -69,7 +69,11 @@ namespace HttpUtils {
       ? Object.entries(headers).map(([key, value]) => `-H "${key}: ${value}"`)
       : [];
     execSync(
-      `curl -s -X POST "http://localhost:3001${path}" -H "Content-Type: application/json" ${headerList.join(
+      `curl -s -X POST "${configs.RECEIVER.PROTOCOL}://${
+        configs.RECEIVER.HOST
+      }:${
+        configs.RECEIVER.PORT
+      }${path}" -H "Content-Type: application/json" ${headerList.join(
         ' '
       )} -d "${JSONData}"`,
       { stdio: 'pipe' }
@@ -94,9 +98,9 @@ namespace HttpUtils {
         )
       : [];
     execSync(
-      `curl -s -X DELETE -G "http://localhost:3001${path}" ${queryList.join(
-        ' '
-      )}`,
+      `curl -s -X DELETE -G "${configs.RECEIVER.PROTOCOL}://${
+        configs.RECEIVER.HOST
+      }:${configs.RECEIVER.PORT}${path}" ${queryList.join(' ')}`,
       {
         stdio: 'pipe',
       }

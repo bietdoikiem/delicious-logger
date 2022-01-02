@@ -106,7 +106,7 @@ export default abstract class Logger implements ILogger {
       data: this.parseReq(req),
     });
     const encodedIP = encodeURIComponent(ip);
-    HttpUtils.postJSON(`/victims/logs?victimIP=${encodedIP}`, {
+    HttpUtils.postJSON(`/api/victims/logs?victimIP=${encodedIP}`, {
       log: serializedObj,
     });
   }
